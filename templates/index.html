@@ -1,0 +1,42 @@
+    <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세줄요약 [cite: 4]</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; max-width: 768px; margin: 40px auto; padding: 20px; background-color: #f9f9f9; color: #333; }
+        h1 { text-align: center; color: #007bff; }
+        form { display: flex; gap: 10px; margin-bottom: 30px; }
+        input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        input[type="submit"] { padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        input[type="submit"]:hover { background-color: #0056b3; }
+        .result { background-color: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-top: 20px; white-space: pre-wrap; line-height: 1.6; }
+        .error { color: #d9534f; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>세줄요약: AI YouTube 요약 서비스 </h1>
+    
+    <form action="/" method="POST">
+        <input type="text" name="youtube_url" placeholder="요약할 YouTube URL을 입력하세요..." required>
+        <input type="submit" value="요약하기 [cite: 70]">
+    </form>
+
+    {% if summary %}
+    <div class="result">
+        <strong>💡 AI 요약 결과</strong>
+        <hr>
+        {{ summary }}
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="result error">
+        <strong>⚠️ 오류 발생</strong>
+        <hr>
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>
