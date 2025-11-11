@@ -1,27 +1,60 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>세줄요약 [cite: 4]</title>
+    <title>세줄요약</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; max-width: 768px; margin: 40px auto; padding: 20px; background-color: #f9f9f9; color: #333; }
         h1 { text-align: center; color: #007bff; }
-        form { display: flex; gap: 10px; margin-bottom: 30px; }
-        input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        input[type="submit"] { padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        
+        /* 탭 스타일 */
+        .tab-container { display: flex; border-bottom: 2px solid #ddd; }
+        .tab { padding: 12px 20px; cursor: pointer; font-size: 18px; border: none; background-color: transparent; }
+        .tab.active { color: #007bff; border-bottom: 3px solid #007bff; font-weight: bold; }
+        
+        /* 폼 콘텐츠 스타일 */
+        .tab-content { display: none; padding-top: 20px; }
+        .tab-content.active { display: block; }
+        
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input[type="text"] { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        input[type="file"] { font-size: 16px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        input[type="submit"] { padding: 12px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; }
         input[type="submit"]:hover { background-color: #0056b3; }
+        
         .result { background-color: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-top: 20px; white-space: pre-wrap; line-height: 1.6; }
         .error { color: #d9534f; font-weight: bold; }
+        .loading { text-align: center; font-size: 18px; color: #555; }
     </style>
 </head>
 <body>
-    <h1>세줄요약: AI YouTube 요약 서비스 </h1>
-    
-    <form action="/" method="POST">
-        <input type="text" name="youtube_url" placeholder="요약할 YouTube URL을 입력하세요..." required>
-        <input type="submit" value="요약하기 [cite: 70]">
-    </form>
+    <h1>세줄요약: AI YouTube & 파일 요약</h1>
+
+    <div class="tab-container">
+        <button class="tab active" onclick="openTab(event, 'url-tab')">YouTube URL</button>
+        <button class="tab" onclick="openTab(event, 'file-tab')">파일 업로드</button>
+    </div>
+
+    <div id="url-tab" class="tab-content active">
+        <form action="/summarize_url" method="POST">
+            <input type="text" name="youtube_url" placeholder="요약할 YouTube URL을 입력하세요..." required>
+            <input type="submit" value="URL 요약하기">
+        </form>
+    </div>
+
+    <div id="file-tab" class="tab-content">
+        <form action="/summarize_file" method="POST" enctype="multipart/form-data">
+            <input type="file" name="media_file" accept="video/*, audio/*" required>
+            <input type="submit" value="파일 요약하기">
+        </form>
+    </div>
+
+    {% if loading %}
+    <div class="loading">
+        <p>파일을 처리 중입니다. (파일 크기에 따라 최대 몇 분 정도 걸릴 수 있습니다)</p>
+    </div>
+    {% endif %}
 
     {% if summary %}
     <div class="result">
@@ -38,5 +71,21 @@
         <p>{{ error }}</p>
     </div>
     {% endif %}
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 </body>
 </html>
